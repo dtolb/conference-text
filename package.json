@@ -1,0 +1,27 @@
+{
+  "name": "conference-text",
+  "version": "1.0.0",
+  "description": "Allows one user to manage a group via SMS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dtolb/conference-text.git"
+  },
+  "keywords": [
+    "bandwidth",
+    "node",
+    "sms",
+    "conference",
+    "mms",
+    "group"
+  ],
+  "author": "Dan Tolbert",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dtolb/conference-text/issues"
+  },
+  "homepage": "https://github.com/dtolb/conference-text#readme"
+}
