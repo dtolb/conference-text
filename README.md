@@ -1,5 +1,15 @@
+<div align="center">
+
 # conference-text
+
+<a href="http://dev.bandwidth.com"><img src="https://s3.amazonaws.com/bwdemos/BW-VMP.png"/></a>
+</div>
+
 Let the conference organizer message the team with updates
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+# Create React App Scaffold README
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
