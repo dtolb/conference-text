@@ -9,6 +9,21 @@ Let the conference organizer message the team with updates
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+
+## Prereqs
+
+This app assumes a least a mild understanding of the following:
+
+* [NodeJS](https://nodejs.org/en/)
+* [MongoDB](https://www.mongodb.com/)
+* [Express](https://expressjs.com/)
+* [Bandwidth](https://bandwidth.com/)
+* [Git](https://git-scm.com/)
+
+## Text-flow
+
+![Text-flow](Conference-Text_Flow.png)
+
 # Create React App Scaffold README
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
