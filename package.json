@@ -17,7 +17,8 @@
     "express": "^4.16.4",
     "http-errors": "^1.7.1",
     "mongoose": "^5.4.7",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "sequelize": "^4.42.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1"
