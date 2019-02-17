@@ -54,9 +54,3 @@
 | `incoming_callback`    | `JSONB`             | Callback for incoming messages     | ❌        |
 | `delivered_callback`   | `JSONB`             | Callback for delivered messages    | ❌        |
 | `failed_callback`      | `JSONB`             | Callback for failed messages       | ❌        |
-
-
-
-
-
-
