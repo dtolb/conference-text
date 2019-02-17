@@ -1,18 +1,20 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-
-
-const schema = new Schema({
-  id            : {type: String, required: true},
-  time          : {type: String, required: true},
-  to            : {type: [String], required: true},
-  from          : {type: String, required: true},
-  text          : {type: String, required: true},
-  applicationId : {type: String, required: true},
-  tag           : {type: String, required: true},
-  owner         : {type: String, required: true},
-  direction     : {type: String, required: true},
-  segmentCount  : {type: Number, required: true},
-});
-
-module.exports = mongoose.model('Message', schema);
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const MESSAGE = sequelize.define('MESSAGE', {
+    bandwidthMessageId: DataTypes.STRING,
+    apiResposne: DataTypes.JSONB,
+    failed: DataTypes.BOOLEAN,
+    direction: DataTypes.ENUM('in', 'out'),
+    date: DataTypes.DATE,
+    incomingCallback: DataTypes.JSONB,
+    deliveredCallback: DataTypes.JSONB,
+    failedCallback: DataTypes.JSONB
+  }, {});
+  MESSAGE.associate = function(models) {
+    Message.belongsTo(models.Member, {
+      foreignKey: 'memberId',
+      onDelete: 'CASCADE',
+    })
+  };
+  return MESSAGE;
+};

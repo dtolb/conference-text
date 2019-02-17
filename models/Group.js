@@ -1,11 +1,20 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Group = sequelize.define('Group', {
+    name: DataTypes.STRING
+  }, {});
+  Group.associate = function(models) {
+    Group.hasMany(models.Member, {
+      foreignKey: 'memberId',
+      as: 'members',
+    });
 
+    Group.hasOne(models.BandwidthNumber, {
+      foreignKey: 'bandwidthNumberId',
+      as: 'members',
+    })
 
-const schema = new Schema({
-  bandwidthNumber : {type: String, required: true},
-  adminNumber     : {type: String, required: true},
-  memberNumbers   : {type: [String], required: true},
-});
-
-module.exports = mongoose.model('Group', schema);
+    Group.belongsTo(models.User);
+  };
+  return Group;
+};
