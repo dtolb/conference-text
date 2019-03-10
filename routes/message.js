@@ -51,25 +51,29 @@ const sendMessage = async (message) => {
 
 router.post('/', async (req, res) => {
   //console.log(req.body)
-  const messagePayload = req.body[0]
   try {
     res.sendStatus(200);
+    const messagePayload = req.body[0]
     const myCallback = new MessageCallback(messagePayload);
     const result = await myCallback.save();
     //console.log(result);
     if (messagePayload.message.direction === 'out') {
       return result;
     }
-    const myGroup = await Group.find({ bandwidthAdminNumber: messagePayload.message.owner }).exec();
+    const query = {$or: [
+      { bandwidthAdminNumber: messagePayload.message.owner },
+      { bandwidthMemberNumber: messagePayload.message.owner },
+    ]};
+    const myGroup = await Group.find(query).exec();
     if (!myGroup) {
-
+      return;
     }
-    if (myGroup.adminNumber === messagePayload.message.from) {
+    if (myGroup.adminNumbers.includes(messagePayload.message.from)) {
       const messages = [];
-      for (let i = 0; i < myGroup.memberNumbers.length; i++) {
+      for (let i = 0; i < myGroup.members.length; i++) {
         const message = sendMessage({
-          to: myGroup.memberNumbers[i],
-          from: messagePayload.message.owner,
+          to: myGroup.members[i].phoneNumber,
+          from: myGroup.bandwidthMemberNumber,
           text: messagePayload.message.text,
           media: messagePayload.message.media,
           applicationId: messagePayload.message.applicationId
@@ -77,19 +81,24 @@ router.post('/', async (req, res) => {
         messages.push(message);
       }
       const responses = await Promise.all(messages);
-      //console.log(responses);
+      return responses;
     }
-    else if (myGroup.memberNumbers.indexOf(messagePayload.message.from) > -1) {
+    const member = myGroup.members.filter(obj => {
+      return obj.phoneNumber === messagePayload.message.from;
+    })
+    if (member.length !== 0) {
       const message = await sendMessage({
-        to: myGroup.adminNumber,
-        from: messagePayload.message.owner,
-        text: messagePayload.message.text,
+        to: myGroup.adminNumbers,
+        from: myGroup.bandwidthAdminNumber,
+        text: `${member[0].name}: ${messagePayload.message.text}`,
         media: messagePayload.message.media,
         applicationId: messagePayload.message.applicationId
       });
+
+      return message;
     }
     else {
-      console.log('Number mismatch');
+      console.log(`Unknown member number: ${messagePayload.message.from}`);
     }
   }
   catch (e) {
