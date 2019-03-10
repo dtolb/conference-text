@@ -60,9 +60,9 @@ router.post('/', async (req, res) => {
     if (messagePayload.message.direction === 'out') {
       return result;
     }
-    const myGroup = await Group.findOne({ bandwidthNumber: messagePayload.message.owner }).exec();
+    const myGroup = await Group.find({ bandwidthAdminNumber: messagePayload.message.owner }).exec();
     if (!myGroup) {
-      return;
+
     }
     if (myGroup.adminNumber === messagePayload.message.from) {
       const messages = [];
