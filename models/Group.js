@@ -8,8 +8,8 @@ const schema = new Schema({
   adminNumbers          : {type: [String], required: true},
   members         : [{
     phoneNumber : {type: String, required: true},
-    name        : {type: String, required: true},
-  }], required: true},
-);
+    name        : {type: String, required: true}
+  }]
+});
 
 module.exports = mongoose.model('Group', schema);
