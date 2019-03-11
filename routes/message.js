@@ -27,7 +27,9 @@ router.post('/', async (req, res) => {
     if (!myGroup) {
       return;
     }
-    if (myGroup.adminNumbers.includes(messagePayload.message.from)) {
+    const fromAdmin = (myGroup.adminNumbers.includes(messagePayload.message.from));
+    const toAdminNumber = (messagePayload.message.owner === myGroup.bandwidthAdminNumber);
+    if (fromAdmin && toAdminNumber) {
       const payload = {
         members: myGroup.members,
         from: myGroup.bandwidthMemberNumber,
