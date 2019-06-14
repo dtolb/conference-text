@@ -27,17 +27,36 @@ router.post('/', async (req, res) => {
     if (!myGroup) {
       return;
     }
+    const messageText = messagePayload.message.text;
     const fromAdmin = (myGroup.adminNumbers.includes(messagePayload.message.from));
     const toAdminNumber = (messagePayload.message.owner === myGroup.bandwidthAdminNumber);
-    if (fromAdmin && toAdminNumber) {
+    const isBroadcast = (messageText.toLowerCase().startsWith("#"))
+    const isDirectMessage = (messageText.toLowerCase().startsWith("@"))
+    if (fromAdmin && toAdminNumber && isBroadcast) {
       const payload = {
         members: myGroup.members,
         from: myGroup.bandwidthMemberNumber,
-        text: messagePayload.message.text,
+        text: messageText,
         applicationId:  messagePayload.message.applicationId
       }
       const messages = await bw.sendMessages(payload);
       return messages;
+    }
+    else if (fromAdmin && toAdminNumber && isDirectMessage) {
+      // grab first word (username)
+      const userName = (messageText.substr(1).trim().split(" ")[0]);
+      const user = myGroup.members.filter(obj => {
+        return obj.userName === userName;
+      });
+      if (user.length !== 0) {
+        const message = await bw.sendMessage({
+          to: user.phoneNumber,
+          from: myGroup.bandwidthMemberNumber,
+          text: messageText,
+          applicationId: messagePayload.message.applicationId
+        })
+        return message;
+      }
     }
     else {
       console.log(`Number ${messagePayload.message.from} is not an admin`);
@@ -49,7 +68,7 @@ router.post('/', async (req, res) => {
       const message = await bw.sendMessage({
         to: myGroup.adminNumbers,
         from: myGroup.bandwidthAdminNumber,
-        text: `${member[0].name}: ${messagePayload.message.text}`,
+        text: `${member[0].userName}: ${messagePayload.message.text}`,
         media: messagePayload.message.media,
         applicationId: messagePayload.message.applicationId
       });
