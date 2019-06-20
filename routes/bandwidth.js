@@ -1,16 +1,16 @@
 const axios = require('axios');
 
-const userId     = process.env.BANDWIDTH_USER_ID;
+const accountId     = process.env.BANDWIDTH_ACCOUNT_ID;
 const apiToken   = process.env.BANDWIDTH_API_TOKEN;
 const apiSecret  = process.env.BANDWIDTH_API_SECRET;
 module.exports.applicationId = process.env.BANDWIDTH_APPLICATION || 'ed22c391-94e2-4d5a-a73b-b849d063c056';
 
-if (!userId || !apiToken || !apiSecret || !module.exports.applicationId) {
-  throw new Error('Invalid or non-existing Bandwidth credentials. \Please set your: \n * userId \n * apiToken \n * apiSecret');
+if (!accountId || !apiToken || !apiSecret || !module.exports.applicationId) {
+  throw new Error('Invalid or non-existing Bandwidth credentials. \Please set your: \n * accountId \n * apiToken \n * apiSecret');
 }
 
 const messageV2API = axios.create({
-  baseURL: `https://api.catapult.inetwork.com/v2/users/${userId}/messages`,
+  baseURL: `https://messaging.bandwidth.com/api/v2/users/${accountId}/messages`,
   auth: {
     username: apiToken,
     password: apiSecret
