@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     const myCallback = new MessageCallback(messagePayload);
     const result = await myCallback.save();
     //console.log(result);
-    if (messagePayload.message.direction === 'out') {
+    if (messagePayload.message.direction.toLowerCase() !== 'in') {
       return result;
     }
     const query = {$or: [
@@ -27,17 +27,18 @@ router.post('/', async (req, res) => {
     if (!myGroup) {
       return;
     }
-    const messageText = messagePayload.message.text;
-    const fromAdmin = (myGroup.adminNumbers.includes(messagePayload.message.from));
-    const toAdminNumber = (messagePayload.message.owner === myGroup.bandwidthAdminNumber);
-    const isBroadcast = (messageText.toLowerCase().startsWith("#"))
+    const messageText     = (messagePayload.message.text);
+    const fromAdmin       = (myGroup.adminNumbers.includes(messagePayload.message.from));
+    const toAdminNumber   = (messagePayload.message.owner === myGroup.bandwidthAdminNumber);
+    const isBroadcast     = (messageText.toLowerCase().startsWith("#"))
     const isDirectMessage = (messageText.toLowerCase().startsWith("@"))
     if (fromAdmin && toAdminNumber && isBroadcast) {
+      const text = messageText.substring(1).trim();
       const payload = {
-        members: myGroup.members,
-        from: myGroup.bandwidthMemberNumber,
-        text: messageText,
-        applicationId:  messagePayload.message.applicationId
+        members       : myGroup.members,
+        from          : myGroup.bandwidthMemberNumber,
+        text          : text,
+        applicationId : messagePayload.message.applicationId
       }
       const messages = await bw.sendMessages(payload);
       return messages;
@@ -45,32 +46,34 @@ router.post('/', async (req, res) => {
     else if (fromAdmin && toAdminNumber && isDirectMessage) {
       // grab first word (username)
       const userName = (messageText.substr(1).trim().split(" ")[0]);
-      const user = myGroup.members.filter(obj => {
+      const text = messageText.substring(1).replace(userName, "").trim();
+      const member = myGroup.members.filter(obj => {
         return obj.userName === userName;
       });
-      if (user.length !== 0) {
+      if (member.length !== 0) {
         const message = await bw.sendMessage({
-          to: user.phoneNumber,
-          from: myGroup.bandwidthMemberNumber,
-          text: messageText,
-          applicationId: messagePayload.message.applicationId
+          to            : member[0].phoneNumber,
+          from          : myGroup.bandwidthMemberNumber,
+          text          : text,
+          applicationId : messagePayload.message.applicationId
         })
         return message;
       }
     }
     else {
-      console.log(`Number ${messagePayload.message.from} is not an admin`);
+      console.log(`Did not broadcast message: ${messageText} from ${messagePayload.message.from}`);
     }
     const member = myGroup.members.filter(obj => {
       return obj.phoneNumber === messagePayload.message.from;
     })
-    if (member.length !== 0) {
+    const isMember = (member.length !== 0)
+    if (isMember) {
       const message = await bw.sendMessage({
-        to: myGroup.adminNumbers,
-        from: myGroup.bandwidthAdminNumber,
-        text: `${member[0].userName}: ${messagePayload.message.text}`,
-        media: messagePayload.message.media,
-        applicationId: messagePayload.message.applicationId
+        to            : myGroup.adminNumbers,
+        from          : myGroup.bandwidthAdminNumber,
+        text          : `${member[0].userName}: ${messagePayload.message.text}\n reply @${member[0].userName} to send a message to ${member[0].name}`,
+        media         : messagePayload.message.media,
+        applicationId : messagePayload.message.applicationId
       });
 
       return message;
