@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
       const message = await bw.sendMessage({
         to            : myGroup.adminNumbers,
         from          : myGroup.bandwidthAdminNumber,
-        text          : `${member[0].userName}: ${messagePayload.message.text}\n reply @${member[0].userName} to send a message to ${member[0].name}`,
+        text          : `${member[0].userName}: ${messagePayload.message.text}\nreply @${member[0].userName} to send a message to ${member[0].name}`,
         media         : messagePayload.message.media,
         applicationId : messagePayload.message.applicationId
       });

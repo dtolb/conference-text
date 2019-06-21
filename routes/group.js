@@ -6,8 +6,8 @@ const bw = require('./bandwidth');
 
 router.post('/', async (req, res, next) => {
   console.log(req.body);
-  const adminText = 'Welcome to conference text, please text this group to send messages to all members.';
-  const groupText = 'Welcome to the Bandwidth Enterprise Connect texting tool! We’ll use this throughout the event for group communication with the Bandwidth team onsite. To ask a question, simply reply to this number - only the show admins will see your text.  To opt out, reply "STOP" - to opt back in, reply "UNSTOP"';
+  const adminText = 'Welcome to conference text, please text this group to send messages to all members.\nIn order to send a message to all members, prefix your message with "#" like:\n"#Hey everyone food is at noon"\nTo send a message to a specific member, prefix your message with "@username" like:\n "@dtolb Food is at noon"';
+  const groupText = 'Welcome to the Bandwidth ITW texting tool! We’ll use this throughout the event for group communication with the Bandwidth team onsite. To ask a question, simply reply to this number - only the show admins will see your text.  To opt out, reply “STOP” - to opt back in, reply “UNSTOP”';
   try {
     const myGroup = new Group(req.body)
     const result = await myGroup.save();
