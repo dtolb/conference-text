@@ -12,7 +12,7 @@ const schema = new Schema({
       time          : {type: String, required: true},
       to            : {type: [String], required: true},
       from          : {type: String, required: true},
-      text          : {type: String, required: true},
+      text          : {type: String, required: false},
       applicationId : {type: String, required: true},
       media         : {type: [String], required: true},
       owner         : {type: String, required: true},
