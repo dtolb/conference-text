@@ -7,8 +7,6 @@
 
 Let the conference organizer message the team with updates
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
 
 ## Prereqs
 
