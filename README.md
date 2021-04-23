@@ -22,73 +22,53 @@ This app assumes a least a mild understanding of the following:
 
 ![Text-flow](Conference-Text_Flow.png)
 
-# Create React App Scaffold README
+## Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Create a "group"
 
-## Available Scripts
+Groups need a list of:
+* admins consistenting of
+    - "Name"
+    - "Phone Number"
+* attendees consistenting of
+    - "username" (`dtolbert` or something similar)
+    - "Phone Number"
 
-In the project directory, you can run:
+On group creation send an introduction text:
+* as a "group" message to all the admins
+* as an individual sms (will need to iterate each) to the attende
 
-### `npm start`
+### On inbound message
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* Check the `from` number to find in a group
+  - If not in a group, just ignore the inbound sms
+* If the `from` number is an attendee 
+  - Check the text for `stop` if there, then remove them from the group
+  - prepend the `username` to the message
+  - forward the message as a group message to the admins
+* If the `from` number is an admin
+  - Check the first character for `#` or `@` otherwise it's intended as a message for just the other admins to see
+* if the first character is an `@` the message is intended for a **SPECIFIC** attendee
+  - message should be like `@dtolbert food is at a 11`
+  - look up the user's phone number in the group by username
+  - send **ONLY** the message after the `@dtolbert` to only that phone number
+* if the first character is an `#` the message is intended for **ALL** attendees
+  - message should be like `# hey all, need you to be at the booth by 11`
+  - look up the list of attendees phonenumbers'
+  - iterate over the list and send **ONLY** the message after the `#`
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### All together
 
-### `npm test`
+* Admins can message each other in a group sms without attendees receiving the message unless the message is prefixed with a:
+  - `#` to send to **ALL** Attendees
+  - `@{username}` to send to a specific attendee
+* Attendees can message to the number to ask questions of admins
+* Attendees can receive messages from the number with updates either to the whole group or just themselves
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Admin view
 
-### `npm run build`
+![image](https://user-images.githubusercontent.com/6805534/115922788-532ea380-a44b-11eb-99a5-440a30ecb282.png)
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Attendee View
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+![image](https://user-images.githubusercontent.com/6805534/115922976-90933100-a44b-11eb-937b-56ba162fe13a.png)
