@@ -5,6 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+require('dotenv').config()
 
 const messageRouter = require('./routes/message');
 const groupRouter = require('./routes/group')
